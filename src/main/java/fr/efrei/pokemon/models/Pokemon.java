@@ -15,7 +15,7 @@ public class Pokemon {
 	private int level;
 
 	@Enumerated(EnumType.STRING)
-	private Type type; // SI mon pokemon est type feu -> Type == "FEU"
+	private Type type;
 
 	public String getName() {
 		return name;

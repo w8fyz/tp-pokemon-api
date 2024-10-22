@@ -2,6 +2,8 @@ package fr.efrei.pokemon.services;
 
 import fr.efrei.pokemon.dto.CreateTrainer;
 import fr.efrei.pokemon.dto.UpdateTrainer;
+import fr.efrei.pokemon.models.Arena;
+import fr.efrei.pokemon.models.GameObjectInstance;
 import fr.efrei.pokemon.models.Pokemon;
 import fr.efrei.pokemon.models.Trainer;
 import fr.efrei.pokemon.repositories.TrainerRepository;
@@ -17,11 +19,15 @@ public class TrainerService {
 
 	private final TrainerRepository repository;
 	private final PokemonService pokemonService;
+	private final GameObjectService gameObjectService;
+	private final ArenaService arenaService;
 
 	@Autowired
-	public TrainerService(TrainerRepository repository, PokemonService pokemonService) {
+	public TrainerService(TrainerRepository repository, PokemonService pokemonService, GameObjectService gameObjectService, ArenaService arenaService) {
 		this.repository = repository;
 		this.pokemonService = pokemonService;
+		this.gameObjectService = gameObjectService;
+		this.arenaService = arenaService;
 	}
 
 	public List<Trainer> findAll() {
@@ -52,6 +58,25 @@ public class TrainerService {
 		// j'applique la liste de pokemon au trainer que je créé
 		trainer.setTeam(pokemonAAjouter);
 		// pokemonIds.forEach(id -> pokemonService.findById(id));
+		List<GameObjectInstance> gameObjectInstances = new ArrayList<>();
+		List<String> gameObjectIDs = trainerBody.getGameObjects();
+		for(String idGameObject : gameObjectIDs) {
+			GameObjectInstance gameObjectInstance = gameObjectService.findById(idGameObject);
+			if(gameObjectInstance != null) {
+				gameObjectInstances.add(gameObjectInstance);
+			}
+		}
+		trainer.setGameObjects(gameObjectInstances);
+
+		List<Arena> visitedArenas = new ArrayList<>();
+		List<String> arenasID = trainerBody.getVisitedArenas();
+		for(String idArenas : arenasID) {
+			Arena arenas = arenaService.findById(idArenas);
+			if(arenas != null) {
+				visitedArenas.add(arenas);
+			}
+		}
+		trainer.setVisitedArena(visitedArenas);
 		repository.save(trainer);
 	}
 
@@ -72,6 +97,29 @@ public class TrainerService {
 			}
 			pokemonList.addAll(trainer.getTeam());
 			trainer.setTeam(pokemonList);
+		}
+		if(trainerBody.getGameObjects() != null && !trainerBody.getGameObjects().isEmpty()) {
+			List<GameObjectInstance> gameObjectInstances = new ArrayList<>();
+			List<String> gameObjectIDs = trainerBody.getGameObjects();
+			for(String idGameObject : gameObjectIDs) {
+				GameObjectInstance gameObjectInstance = gameObjectService.findById(idGameObject);
+				if(gameObjectInstance != null) {
+					gameObjectInstances.add(gameObjectInstance);
+				}
+			}
+			gameObjectInstances.addAll(trainer.getGameObjects());
+			trainer.setGameObjects(gameObjectInstances);
+		}
+		if(trainerBody.getVisitedArenas() != null && !trainer.getVisitedArena().isEmpty()) {
+			List<Arena> visitedArenas = new ArrayList<>();
+			List<String> arenasID = trainerBody.getVisitedArenas();
+			for(String idArenas : arenasID) {
+				Arena arenas = arenaService.findById(idArenas);
+				if(arenas != null) {
+					visitedArenas.add(arenas);
+				}
+			}
+			trainer.setVisitedArena(visitedArenas);
 		}
 		repository.save(trainer);
 	}

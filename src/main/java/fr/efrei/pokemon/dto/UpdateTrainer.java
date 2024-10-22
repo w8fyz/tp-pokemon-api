@@ -8,12 +8,31 @@ public class UpdateTrainer {
 
 	private List<String> team;
 
+	private List<String> gameObjects;
+	private List<String> visitedArenas;
+
+	public List<String> getVisitedArenas() {
+		return visitedArenas;
+	}
+
+	public void setVisitedArenas(List<String> visitedArenas) {
+		this.visitedArenas = visitedArenas;
+	}
+
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<String> getGameObjects() {
+		return gameObjects;
+	}
+
+	public void setGameObjects(List<String> gameObjects) {
+		this.gameObjects = gameObjects;
 	}
 
 	public List<String> getTeam() {

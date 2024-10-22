@@ -16,6 +16,36 @@ public class Trainer {
 	@OneToMany
 	private List<Pokemon> team;
 
+	@OneToMany
+	private List<GameObjectInstance> gameObjects;
+
+	@OneToMany
+	private List<Arena> visitedArena;
+
+	public List<Arena> getVisitedArena() {
+		return visitedArena;
+	}
+
+	public void setVisitedArena(List<Arena> visitedArena) {
+		this.visitedArena = visitedArena;
+	}
+
+	public List<GameObjectInstance> getGameObjects() {
+		return gameObjects;
+	}
+
+	public void setGameObjects(List<GameObjectInstance> gameObjects) {
+		this.gameObjects = gameObjects;
+	}
+
+	public void addGameObject(GameObjectInstance gameObjectInstance) {
+		this.gameObjects.add(gameObjectInstance);
+	}
+
+	public void removeGameObject(GameObjectInstance gameObjectInstance) {
+		this.gameObjects.remove(gameObjectInstance);
+	}
+
 	public String getId() {
 		return id;
 	}
